@@ -971,6 +971,8 @@ bool AppInitParameterInteraction(const ArgsManager& args)
     }
 
     if (args.GetIntArg("-prune", 0)) {
+        LogWarning("Running with -prune means this node is unable to serve old blocks to peers who are doing "
+                   "initial block download. Disable -prune to increase the strength of the network.");
         if (args.GetBoolArg("-txindex", DEFAULT_TXINDEX))
             return InitError(_("Prune mode is incompatible with -txindex."));
         if (args.GetBoolArg("-reindex-chainstate", false)) {
