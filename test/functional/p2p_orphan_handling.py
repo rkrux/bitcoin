@@ -632,6 +632,7 @@ class OrphanHandlingTest(BitcoinTestFramework):
             testres = node.testmempoolaccept([large_orphan.serialize().hex()])
             assert not testres[0]["allowed"]
             assert_equal(testres[0]["reject-reason"], "missing-inputs")
+            time.sleep(0.25)
 
         num_individual_dosers = 20
         self.log.info(f"Connect {num_individual_dosers} peers and send a very large orphan from each one")
