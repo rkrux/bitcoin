@@ -619,7 +619,6 @@ class OrphanHandlingTest(BitcoinTestFramework):
     @cleanup
     def test_maximal_package_protected(self):
         self.log.info("Test that a node only announcing a maximally sized ancestor package is protected in orphanage")
-        self.nodes[0].setmocktime(int(time.time()))
         node = self.nodes[0]
 
         peer_normal = node.add_p2p_connection(P2PInterface())
