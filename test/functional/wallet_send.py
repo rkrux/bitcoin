@@ -32,8 +32,8 @@ class WalletSendTest(BitcoinTestFramework):
         self.noban_tx_relay = True
         self.supports_cli = False
         self.extra_args = [
-            ["-walletrbf=1", "-datacarriersize=16"],
-            ["-walletrbf=1", "-datacarriersize=16"]
+            ["-datacarriersize=16"],
+            ["-datacarriersize=16"]
         ]
         getcontext().prec = 8 # Satoshi precision for Decimal
 
