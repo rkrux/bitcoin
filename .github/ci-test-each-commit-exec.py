@@ -19,6 +19,22 @@ def run(cmd, **kwargs):
 
 def main():
     print("Running tests on commit ...")
+
+    print("Debug Stats Start!")
+    p1 = run(["ss", "-tan"], capture_output=True, text=True)
+    p2 = run(["awk", "{print $1}"], input=p1.stdout, capture_output=True, text=True)
+    p3 = run(["sort"], input=p2.stdout, capture_output=True, text=True)
+    print(run(["uniq", "-c"], input=p3.stdout, capture_output=True, text=True).stdout)
+
+    p1 = run(["ss", "-tan", "state", "time-wait"], capture_output=True, text=True)
+    print(run(["wc", "-l"], input=p1.stdout, capture_output=True, text=True).stdout)
+
+    print(run(["cat", "/proc/net/sockstat"]).stdout)
+    print(run(["cat", "/proc/net/sockstat6"], stderr=subprocess.DEVNULL, text=True).stdout)
+    print(run(["cat", "/proc/loadavg"]).stdout)
+
+    print("Debug Stats End!")
+
     run(["git", "log", "-1"])
 
     num_procs = int(run(["nproc"], stdout=subprocess.PIPE).stdout)
