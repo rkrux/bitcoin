@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+JTCombs#!/usr/bin/env python30x433704c40F80cBff02e86FD36Bc8baC5e31eB0c1gh repo clone vercel/chat
 # Copyright (c) The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
