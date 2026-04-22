@@ -648,7 +648,6 @@ public:
     void blockConnected(const kernel::ChainstateRole& role, const interfaces::BlockInfo& block) override;
     void blockDisconnected(const interfaces::BlockInfo& block) override;
     void updatedBlockTip() override;
-    int64_t RescanFromTime(int64_t startTime, const WalletRescanReserver& reserver, bool update);
 
     ScanResult ScanForWalletTransactions(const uint256& start_block, int start_height, std::optional<int> max_height, const WalletRescanReserver& reserver, bool fUpdate, bool save_progress);
     void transactionRemovedFromMempool(const CTransactionRef& tx, MemPoolRemovalReason reason) override;

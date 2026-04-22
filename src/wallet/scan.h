@@ -58,6 +58,8 @@ public:
 
 };
 
+int64_t RescanFromTime(CWallet& wallet, int64_t startTime, const WalletRescanReserver& reserver, bool update);
+
 } // namespace wallet
 
 #endif // BITCOIN_WALLET_SCAN_H
