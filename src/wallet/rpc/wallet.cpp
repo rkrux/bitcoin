@@ -15,6 +15,7 @@
 #include <univalue.h>
 #include <util/translation.h>
 #include <wallet/context.h>
+#include <wallet/migration.h>
 #include <wallet/receive.h>
 #include <wallet/rpc/util.h>
 #include <wallet/wallet.h>
