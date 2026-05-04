@@ -440,6 +440,7 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         tx = wpriv.createrawtransaction([{"txid": txid, "vout": 0}], {w0.getnewaddress(): 49.999})
         signed_tx = wpriv.signrawtransactionwithwallet(tx)
         w1.sendrawtransaction(signed_tx['hex'])
+        wpriv.unloadwallet()
 
         # Make sure that we can use import and use multisig as addresses
         self.log.info('Test that multisigs can be imported, signed for, and getnewaddress\'d')
@@ -524,10 +525,12 @@ class ImportDescriptorsTest(BitcoinTestFramework):
 
         self.generate(self.nodes[0], 6)
         assert_equal(wmulti_pub.getbalance(), wmulti_priv.getbalance())
+        wmulti_priv.unloadwallet()
 
         # Make sure that descriptor wallets containing multiple xpubs in a single descriptor load correctly
         wmulti_pub.unloadwallet()
         self.nodes[1].loadwallet('wmulti_pub')
+        wmulti_pub.unloadwallet()
 
         self.log.info("Multisig with distributed keys")
         self.nodes[1].createwallet(wallet_name="wmulti_priv1")
@@ -579,9 +582,11 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         rawtx = self.nodes[1].createrawtransaction([utxo], {w0.getnewaddress(): 9.999})
         tx_signed_1 = wmulti_priv1.signrawtransactionwithwallet(rawtx)
         assert_equal(tx_signed_1['complete'], False)
+        wmulti_priv1.unloadwallet()
         tx_signed_2 = wmulti_priv2.signrawtransactionwithwallet(tx_signed_1['hex'])
         assert_equal(tx_signed_2['complete'], True)
         self.nodes[1].sendrawtransaction(tx_signed_2['hex'])
+        wmulti_priv2.unloadwallet()
 
         self.log.info("We can create and use a huge multisig under P2WSH")
         self.nodes[1].createwallet(wallet_name='wmulti_priv_big', blank=True)
@@ -615,6 +620,7 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         decoded = wmulti_priv_big.gettransaction(txid=txid, verbose=True)['decoded']
         # 20 sigs + dummy + witness script
         assert_equal(len(decoded['vin'][0]['txinwitness']), 22)
+        wmulti_priv_big.unloadwallet()
 
 
         self.log.info("Under P2SH, multisig are standard with up to 15 "
@@ -647,6 +653,7 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         # It is standard and would relay.
         txid = multi_priv_big.sendtoaddress(w0.getnewaddress(), 10, "", "", True)
         decoded = multi_priv_big.gettransaction(txid=txid, verbose=True)['decoded']
+        multi_priv_big.unloadwallet()
 
         self.log.info("Amending multisig with new private keys")
         self.nodes[1].createwallet(wallet_name="wmulti_priv3")
@@ -674,6 +681,8 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         tx = wmulti_priv3.signrawtransactionwithwallet(rawtx)
         assert_equal(tx['complete'], True)
         self.nodes[1].sendrawtransaction(tx['hex'])
+        wmulti_priv3.unloadwallet()
+        w0.unloadwallet()
 
         self.log.info("Combo descriptors cannot be active")
         self.test_importdesc({"desc": descsum_create("combo(tpubDCJtdt5dgJpdhW4MtaVYDhG4T4tF6jcLR1PxL43q9pq1mxvXgMS9Mzw1HnXG15vxUGQJMMSqCQHMTy3F1eW5VkgVroWzchsPD5BUojrcWs8/*)"),
@@ -735,6 +744,8 @@ class ImportDescriptorsTest(BitcoinTestFramework):
             assert_equal(importing.result(), [{"success": True}])
 
         assert_equal(temp_wallet.getbalance(), encrypted_wallet.getbalance())
+        temp_wallet.unloadwallet()
+        encrypted_wallet.unloadwallet()
 
         self.log.info("Multipath descriptors")
         self.nodes[1].createwallet(wallet_name="multipath", blank=True)
@@ -786,6 +797,8 @@ class ImportDescriptorsTest(BitcoinTestFramework):
             assert_equal(w_multipath.getnewaddress(address_type="bech32"), w_multisplit.getnewaddress(address_type="bech32"))
             assert_equal(w_multipath.getrawchangeaddress(address_type="bech32"), w_multisplit.getrawchangeaddress(address_type="bech32"))
         assert_equal(sorted(w_multipath.listdescriptors()["descriptors"], key=lambda x: x["desc"]), sorted(w_multisplit.listdescriptors()["descriptors"], key=lambda x: x["desc"]))
+        w_multipath.unloadwallet()
+        w_multisplit.unloadwallet()
 
         self.log.info("Test older() safety")
 
