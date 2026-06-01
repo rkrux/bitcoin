@@ -22,7 +22,6 @@ from test_framework.descriptors import descsum_create
 from test_framework.extendedkey import ExtendedPrivateKey
 from test_framework.messages import (
     MAX_BIP125_RBF_SEQUENCE,
-    MAX_SEQUENCE_NONFINAL,
 )
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -656,7 +655,7 @@ def test_rebumping_not_replaceable(self, rbf_node, dest_address):
         assert_equal(seq, [seq_in])
 
     bumped = rbf_node.bumpfee(rbfid, fee_rate=ECONOMICAL, replaceable=False)
-    check_sequence(bumped, MAX_SEQUENCE_NONFINAL)
+    check_sequence(bumped, MAX_BIP125_RBF_SEQUENCE)
     bumped = rbf_node.bumpfee(bumped["txid"], {"fee_rate": NORMAL})
     check_sequence(bumped, MAX_BIP125_RBF_SEQUENCE)
 
